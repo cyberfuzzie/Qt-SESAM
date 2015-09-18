@@ -26,6 +26,8 @@ QT += core gui widgets concurrent network
 
 TRANSLATIONS = $$files(translations/QtSESAM_*.ts)
 
+linux:QT += dbus
+
 VERSION_PE_HEADER = 2.0
 
 win32-g++ {

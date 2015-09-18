@@ -75,6 +75,10 @@
 static const int SmartLoginNotActive = -1;
 #endif
 
+#ifdef Q_OS_LINUX
+#include <QtDBus>
+#endif
+
 static const int DefaultMasterPasswordInvalidationTimeMins = 5;
 static const bool CompressionEnabled = true;
 
