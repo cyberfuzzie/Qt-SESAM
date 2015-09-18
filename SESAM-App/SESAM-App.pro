@@ -18,7 +18,7 @@ DEFINES += QTSESAM_VERSION=\\\"$${QTSESAM_VERSION}\\\"
 
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick widgets nfc
 
 SOURCES += main.cpp
 

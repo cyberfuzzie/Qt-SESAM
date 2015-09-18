@@ -160,22 +160,22 @@ private slots:
 
   void crypter_encrypt_decrypt_no_padding(void)
   {
-    SecureByteArray key = Crypter::randomBytes(Crypter::AESKeySize);
-    SecureByteArray IV = Crypter::randomBytes(Crypter::AESBlockSize);
+    SecureByteArray key = Crypter::instance()->randomBytes(Crypter::AESKeySize);
+    SecureByteArray IV = Crypter::instance()->randomBytes(Crypter::AESBlockSize);
     QByteArray data = QByteArray(1024 * Crypter::AESBlockSize, 'A');
-    QByteArray cipher = Crypter::encrypt(key, IV, data, CryptoPP::StreamTransformationFilter::NO_PADDING);
-    QByteArray plain = Crypter::decrypt(key, IV, cipher, CryptoPP::StreamTransformationFilter::NO_PADDING);
+    QByteArray cipher = Crypter::instance()->encrypt(key, IV, data, CryptoPP::StreamTransformationFilter::NO_PADDING);
+    QByteArray plain = Crypter::instance()->decrypt(key, IV, cipher, CryptoPP::StreamTransformationFilter::NO_PADDING);
     QVERIFY(plain == data);
   }
 
   void crypter_encrypt_decrypt_pkcs_padding(void)
   {
     static const int nExtra = 3;
-    SecureByteArray key = Crypter::randomBytes(Crypter::AESKeySize);
-    SecureByteArray IV = Crypter::randomBytes(Crypter::AESBlockSize);
+    SecureByteArray key = Crypter::instance()->randomBytes(Crypter::AESKeySize);
+    SecureByteArray IV = Crypter::instance()->randomBytes(Crypter::AESBlockSize);
     QByteArray data = QByteArray(7 * Crypter::AESBlockSize + nExtra, 'B');
-    QByteArray cipher = Crypter::encrypt(key, IV, data, CryptoPP::StreamTransformationFilter::PKCS_PADDING);
-    QByteArray plain = Crypter::decrypt(key, IV, cipher, CryptoPP::StreamTransformationFilter::PKCS_PADDING);
+    QByteArray cipher = Crypter::instance()->encrypt(key, IV, data, CryptoPP::StreamTransformationFilter::PKCS_PADDING);
+    QByteArray plain = Crypter::instance()->decrypt(key, IV, cipher, CryptoPP::StreamTransformationFilter::PKCS_PADDING);
     QVERIFY(plain == data);
   }
 
@@ -183,7 +183,7 @@ private slots:
   {
     SecureByteArray masterPassword = QString("7h15p455w0rd15m0r37h4n53cr37").toUtf8();
     QByteArray salt = QString("pepper").toUtf8();
-    SecureByteArray key = Crypter::makeKeyFromPassword(masterPassword, salt);
+    SecureByteArray key = Crypter::instance()->makeKeyFromPassword(masterPassword, salt);
     QVERIFY(key.size() == Crypter::AESKeySize);
     QVERIFY(key.toBase64() == "T8LlrPN1aqDlsIJVFA19r0RlZRpj7LuY8xbFnk3Tx8M=");
   }
@@ -194,7 +194,7 @@ private slots:
     QByteArray salt = QString("this is my salt.").toUtf8();
     SecureByteArray key;
     SecureByteArray IV;
-    Crypter::makeKeyAndIVFromPassword(masterPassword, salt, key, IV);
+    Crypter::instance()->makeKeyAndIVFromPassword(masterPassword, salt, key, IV);
     QVERIFY(key.length() == Crypter::AESKeySize);
     QVERIFY(key.toBase64() == "vGoCE/dCUIpQFfPEHnh+qY9HLTeMNPFPMlA9dz5snjs=");
     QVERIFY(IV.length() == Crypter::AESBlockSize);
@@ -204,19 +204,19 @@ private slots:
   void crypter_encode_decode(void)
   {
     SecureByteArray masterPassword = QString("7h15p455w0rd15m0r37h4n53cr37").toUtf8();
-    QByteArray salt = Crypter::generateSalt();
+    QByteArray salt = Crypter::instance()->generateSalt();
     SecureByteArray key;
     SecureByteArray IV;
-    Crypter::makeKeyAndIVFromPassword(masterPassword, salt, key, IV);
+    Crypter::instance()->makeKeyAndIVFromPassword(masterPassword, salt, key, IV);
     QVERIFY(key.length() == Crypter::AESKeySize);
     QVERIFY(IV.length() == Crypter::AESBlockSize);
 
-    SecureByteArray KGK = Crypter::generateKGK();
-    QByteArray data = Crypter::randomBytes(1024);
-    QByteArray cipher = Crypter::encode(key, IV, salt, KGK, data, true);
+    SecureByteArray KGK = Crypter::instance()->generateKGK();
+    QByteArray data = Crypter::instance()->randomBytes(1024);
+    QByteArray cipher = Crypter::instance()->encode(key, IV, salt, KGK, data, true);
 
     SecureByteArray KGK2;
-    QByteArray plain = Crypter::decode(masterPassword, cipher, true, KGK2);
+    QByteArray plain = Crypter::instance()->decode(masterPassword, cipher, true, KGK2);
     QVERIFY(plain == data);
     QVERIFY(KGK == KGK2);
   }

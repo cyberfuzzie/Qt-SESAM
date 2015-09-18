@@ -17,26 +17,22 @@
 
 */
 
-
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtNfc 5.2
 
 ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
+    title: qsTr("c't SESAM Viewer")
 
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
             MenuItem {
-                text: qsTr("&Open")
-                onTriggered: console.log("Open action triggered");
-            }
-            MenuItem {
-                text: qsTr("Exit")
-                onTriggered: Qt.quit();
+                text: qsTr("&Sync")
+                onTriggered: { console.log("Sync action triggered"); }
             }
         }
     }

@@ -29,16 +29,10 @@ DomainSettingsList::DomainSettingsList(void)
 }
 
 
-bool DomainSettings::isEmpty(void) const
-{
-  return domainName.isEmpty();
-}
-
-
 DomainSettings DomainSettingsList::at(const QString &domainName) const
 {
   for (DomainSettingsList::const_iterator ds = constBegin(); ds != constEnd(); ++ds)
-    if (ds->domainName == domainName)
+    if (ds->domainName() == domainName)
       return *ds;
   return DomainSettings();
 }
@@ -54,7 +48,7 @@ void DomainSettingsList::remove(const QString &domainName)
 {
   int toDeleteIdx = -1;
   for (int i = 0; i < count(); ++i) {
-    if (at(i).domainName == domainName) {
+    if (at(i).domainName() == domainName) {
       toDeleteIdx = i;
       break;
     }
@@ -69,7 +63,7 @@ void DomainSettingsList::updateWith(const DomainSettings &src)
 {
   bool found = false;
   for (DomainSettingsList::iterator d = begin(); d != end() && !found; ++d) {
-    if (d->domainName == src.domainName) {
+    if (d->domainName() == src.domainName()) {
       *d = src;
       found = true;
     }
@@ -90,7 +84,7 @@ QJsonDocument DomainSettingsList::toJsonDocument(void) const
 {
   QVariantMap domains;
   for (DomainSettingsList::const_iterator d = constBegin(); d != constEnd(); ++d)
-    domains[d->domainName] = d->toVariantMap();
+    domains[d->domainName()] = d->toVariantMap();
   return QJsonDocument::fromVariant(domains);
 }
 
@@ -99,7 +93,7 @@ QStringList DomainSettingsList::keys(void) const
 {
   QStringList names;
   for (DomainSettingsList::const_iterator d = constBegin(); d != constEnd(); ++d)
-    names << d->domainName;
+    names << d->domainName();
   return names;
 }
 

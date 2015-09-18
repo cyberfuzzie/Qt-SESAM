@@ -77,23 +77,23 @@ void Password::generate(const SecureByteArray &masterPassword)
   Q_D(Password);
 
   const QByteArray &pwd =
-      d->domainSettings.domainName.toUtf8() +
-      d->domainSettings.userName.toUtf8() +
+      d->domainSettings.domainName().toUtf8() +
+      d->domainSettings.userName().toUtf8() +
       masterPassword;
 
-  d->pbkdf2.generate(pwd, QByteArray::fromBase64(d->domainSettings.salt_base64.toUtf8()), d->domainSettings.iterations, QCryptographicHash::Sha512);
+  d->pbkdf2.generate(pwd, QByteArray::fromBase64(d->domainSettings.salt_base64().toUtf8()), d->domainSettings.iterations(), QCryptographicHash::Sha512);
 
-  const int nChars = d->domainSettings.usedCharacters.count();
+  const int nChars = d->domainSettings.usedCharacters().count();
   if (nChars > 0) {
     d->key.clear();
     const QString strModulus = QString("%1").arg(nChars);
     BigInt::Rossi v(d->pbkdf2.hexKey().toStdString(), BigInt::HEX_DIGIT);
     const BigInt::Rossi Modulus(strModulus.toStdString(), BigInt::DEC_DIGIT);
     static const BigInt::Rossi Zero(0);
-    int n = d->domainSettings.length;
+    int n = d->domainSettings.length();
     while (v > Zero && n-- > 0) {
       const BigInt::Rossi &mod = v % Modulus;
-      d->key += d->domainSettings.usedCharacters.at(mod.toUlong());
+      d->key += d->domainSettings.usedCharacters().at(mod.toUlong());
       v = v / Modulus;
     }
     emit generated();

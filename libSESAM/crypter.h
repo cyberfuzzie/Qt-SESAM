@@ -21,6 +21,7 @@
 #ifndef __CRYPTER_H_
 #define __CRYPTER_H_
 
+#include <QObject>
 #include <QByteArray>
 #include <QString>
 #include "securebytearray.h"
@@ -28,24 +29,26 @@
 #include "filters.h"
 #include "aes.h"
 
-class Crypter
+class Crypter : public QObject
 {
+  Q_OBJECT
 public:
+  static Crypter *instance(void);
   static const int AESKeySize;
   static const int AESBlockSize;
   enum FormatFlags {
     ObsoleteDefaultEncryptionFormat = 0x00,
     AES256EncryptedMasterkeyFormat = 0x01
   };
-  static SecureByteArray makeKeyFromPassword(const SecureByteArray &masterPassword, const QByteArray &salt);
-  static void makeKeyAndIVFromPassword(const SecureByteArray &masterPassword, const QByteArray &salt, SecureByteArray &key, SecureByteArray &IV);
-  static QByteArray encode(const SecureByteArray &key, const SecureByteArray &IV, const QByteArray &salt, const SecureByteArray &KGK, const QByteArray &data, bool compress);
-  static QByteArray decode(const SecureByteArray &masterPassword, QByteArray cipher, bool uncompress, SecureByteArray &KGK);
-  static QByteArray randomBytes(const int size);
-  static SecureByteArray generateKGK(void);
-  static QByteArray generateSalt(void);
-  static QByteArray encrypt(const SecureByteArray &key, const SecureByteArray &IV, const QByteArray &plain, CryptoPP::StreamTransformationFilter::BlockPaddingScheme padding);
-  static SecureByteArray decrypt(const SecureByteArray &key, const SecureByteArray &IV, const QByteArray &cipher, CryptoPP::StreamTransformationFilter::BlockPaddingScheme padding);
+  Q_INVOKABLE SecureByteArray makeKeyFromPassword(const SecureByteArray &masterPassword, const QByteArray &salt) const;
+  Q_INVOKABLE void makeKeyAndIVFromPassword(const SecureByteArray &masterPassword, const QByteArray &salt, SecureByteArray &key, SecureByteArray &IV) const;
+  Q_INVOKABLE QByteArray encode(const SecureByteArray &key, const SecureByteArray &IV, const QByteArray &salt, const SecureByteArray &KGK, const QByteArray &data, bool compress) const;
+  Q_INVOKABLE QByteArray decode(const SecureByteArray &masterPassword, QByteArray cipher, bool uncompress, SecureByteArray &KGK) const;
+  Q_INVOKABLE QByteArray randomBytes(const int size) const;
+  Q_INVOKABLE SecureByteArray generateKGK(void) const;
+  Q_INVOKABLE QByteArray generateSalt(void) const;
+  Q_INVOKABLE QByteArray encrypt(const SecureByteArray &key, const SecureByteArray &IV, const QByteArray &plain, CryptoPP::StreamTransformationFilter::BlockPaddingScheme padding) const;
+  Q_INVOKABLE SecureByteArray decrypt(const SecureByteArray &key, const SecureByteArray &IV, const QByteArray &cipher, CryptoPP::StreamTransformationFilter::BlockPaddingScheme padding) const;
 
 private:
   static const int KGKSize;
@@ -54,6 +57,8 @@ private:
   static const int DomainIterations;
   static const int CryptDataSize;
 
+  Crypter(void) {}
+  ~Crypter() {}
 };
 
 #endif // __CRYPTER_H_

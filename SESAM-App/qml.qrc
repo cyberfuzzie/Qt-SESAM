@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>Crypter.qml</file>
     </qresource>
 </RCC>
-

@@ -73,7 +73,7 @@ void NewDomainWizard::clear(void)
 
 void NewDomainWizard::renewSalt(void)
 {
-  ui->saltBase64LineEdit->setText(Crypter::generateSalt().toBase64());
+  ui->saltBase64LineEdit->setText(Crypter::instance()->generateSalt().toBase64());
 }
 
 
