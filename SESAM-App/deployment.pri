@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Oliver Lau <ola@ct.de>
+# Copyright (c) 2015 Oliver Lau <ola@ct.de>, Heise Medien GmbH & Co. KG
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,15 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-include(Qt-SESAM.pri)
-VERSION = -$${QTSESAM_VERSION}
+unix:!android {
+    isEmpty(target.path) {
+        qnx {
+            target.path = /tmp/$${TARGET}/bin
+        } else {
+            target.path = /opt/$${TARGET}/bin
+        }
+        export(target.path)
+    }
+    INSTALLS += target
+}
 
-TEMPLATE = subdirs
-CONFIG += ordered
-SUBDIRS += \
-    libSESAM \
-    UnitTests \
-    Qt-SESAM \
-    SESAM-App
+export(INSTALLS)
 
-win32:SUBDIRS += HashMaster
